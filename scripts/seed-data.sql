@@ -1,3 +1,5 @@
+SET client_encoding = 'UTF8';
+SET names 'UTF8';
 -- Insertar categorías
 INSERT INTO categories (name, description) VALUES
 ('Animales', 'Amigurumis de animales tiernos y adorables'),
