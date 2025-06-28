@@ -1,37 +1,44 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity("orders")
+@Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
-  @Column({ name: "customer_name" })
-  customerName: string
+  @Column({ type: 'varchar', length: 200 })
+  customer_name: string;
 
-  @Column()
-  email: string
+  @Column({ type: 'varchar', length: 200 })
+  email: string;
 
-  @Column()
-  phone: string
+  @Column({ type: 'varchar', length: 20 })
+  phone: string;
 
-  @Column("text")
-  description: string
+  @Column({ type: 'text' })
+  description: string;
 
-  @Column({ name: "image_url", nullable: true })
-  imageUrl: string
+  @Column({
+    type: 'enum',
+    enum: ['pending', 'in_progress', 'completed', 'cancelled'],
+    default: 'pending',
+  })
+  status: string;
 
-  @Column({ default: "pending" })
-  status: string
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  estimated_price: number;
 
-  @Column({ name: "estimated_price", type: "decimal", precision: 10, scale: 2, nullable: true })
-  estimatedPrice: number
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  image_url: string;
 
-  @Column({ name: "estimated_delivery_date", type: "date", nullable: true })
-  estimatedDeliveryDate: Date
+  @CreateDateColumn()
+  created_at: Date;
 
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date
-
-  @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date
+  @UpdateDateColumn()
+  updated_at: Date;
 }

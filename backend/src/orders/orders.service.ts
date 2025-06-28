@@ -1,55 +1,66 @@
-import { Injectable, NotFoundException } from "@nestjs/common"
-import { InjectRepository } from "@nestjs/typeorm"
-import type { Repository } from "typeorm"
-import { Order } from "./entities/order.entity"
-import type { CreateOrderDto } from "./dto/create-order.dto"
-import type { UpdateOrderDto } from "./dto/update-order.dto"
-import type { Express } from "express"
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Order } from './entities/order.entity';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectRepository(Order)
-    private ordersRepository: Repository<Order>,
+    private orderRepository: Repository<Order>,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto, file?: Express.Multer.File): Promise<Order> {
-    const order = this.ordersRepository.create({
-      ...createOrderDto,
-      imageUrl: file ? `/uploads/${file.filename}` : null,
-    })
+  create(createOrderDto: CreateOrderDto, file?: Express.Multer.File) {
+    const order = this.orderRepository.create(createOrderDto);
 
-    return this.ordersRepository.save(order)
+    if (file) {
+      order.image_url = `/uploads/${file.filename}`;
+    }
+
+    return this.orderRepository.save(order);
   }
 
-  async findAll(): Promise<Order[]> {
-    return this.ordersRepository.find({
-      order: { createdAt: "DESC" },
-    })
+  findAll() {
+    return this.orderRepository.find({
+      order: { created_at: 'DESC' },
+    });
   }
 
-  async findOne(id: number): Promise<Order> {
-    const order = await this.ordersRepository.findOne({ where: { id } })
+  async findOne(id: number) {
+    const order = await this.orderRepository.findOne({
+      where: { id },
+    });
+
     if (!order) {
-      throw new NotFoundException(`Order with ID ${id} not found`)
+      throw new NotFoundException(`Order with ID ${id} not found`);
     }
-    return order
+
+    return order;
   }
 
-  async update(id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
-    await this.ordersRepository.update(id, updateOrderDto)
-    return this.findOne(id)
+  async update(id: number, updateOrderDto: UpdateOrderDto) {
+    const order = await this.findOne(id);
+    Object.assign(order, updateOrderDto);
+    return this.orderRepository.save(order);
   }
 
-  async remove(id: number): Promise<void> {
-    const result = await this.ordersRepository.delete(id)
-    if (result.affected === 0) {
-      throw new NotFoundException(`Order with ID ${id} not found`)
-    }
+  async remove(id: number) {
+    const order = await this.findOne(id);
+    return this.orderRepository.remove(order);
   }
 
-  async updateStatus(id: number, status: string): Promise<Order> {
-    await this.ordersRepository.update(id, { status })
-    return this.findOne(id)
+  async updateStatus(id: number, status: string) {
+    const order = await this.findOne(id);
+    order.status = status;
+    return this.orderRepository.save(order);
+  }
+
+  findByStatus(status: string) {
+    return this.orderRepository.find({
+      where: { status },
+      order: { created_at: 'DESC' },
+    });
   }
 }
