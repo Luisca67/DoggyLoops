@@ -11,89 +11,24 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
+import { fetchProducts, fetchTestimonials, createOrder, createTestimonial, type Amigurumi, type Testimonial, type OrderData } from "@/lib/api"
 
-interface Amigurumi {
-  id: number
-  name: string
-  description: string
-  price: number
-  image: string
-  category: string
+// Función para convertir rutas de la base de datos a rutas web
+const getImageUrl = (imageUrl: string | null): string => {
+  if (!imageUrl) return "/placeholder.svg"
+  
+  // Si la ruta contiene 'app\public\' o 'app/public/', extraer solo el nombre del archivo
+  const fileName = imageUrl.replace(/^.*[\\\/]/, '') // Extrae solo el nombre del archivo
+  return `/${fileName}`
 }
-
-interface Testimonial {
-  id: number
-  name: string
-  message: string
-  rating: number
-  createdAt: string
-}
-
-interface OrderData {
-  customerName: string
-  email: string
-  phone: string
-  description: string
-  image?: File
-}
-
-const mockAmigurumis: Amigurumi[] = [
-  {
-    id: 1,
-    name: "Osito Teddy Clásico",
-    description: "Adorable osito de peluche tejido a mano con hilo de algodón suave",
-    price: 25,
-    image: "/osito-teddy.png?height=300&width=300",
-    category: "Animales",
-  },
-  {
-    id: 2,
-    name: "Unicornio Mágico",
-    description: "Unicornio colorido con cuerno dorado y melena arcoíris",
-    price: 35,
-    image: "/unicornio.jpg?height=300&width=300",
-    category: "Fantasía",
-  },
-  {
-    id: 3,
-    name: "Gatito Kawaii",
-    description: "Tierno gatito con expresión dulce y colores pastel",
-    price: 20,
-    image: "/gatito.jpg?height=300&width=300",
-    category: "Animales",
-  },
-  {
-    id: 4,
-    name: "Pulpo Arcoíris",
-    description: "Pulpo multicolor con tentáculos suaves y ojos brillantes",
-    price: 30,
-    image: "/pulpo.jpg?height=300&width=300",
-    category: "Marinos",
-  },
-  {
-    id: 5,
-    name: "Dragón Amigable",
-    description: "Dragón sonriente con alas extendidas y colores vibrantes",
-    price: 40,
-    image: "/dragon.jpg?height=300&width=300",
-    category: "Fantasía",
-  },
-  {
-    id: 6,
-    name: "Conejito Primaveral",
-    description: "Conejo suave con orejas largas y colores primaverales",
-    price: 22,
-    image: "/conejo.jpg?height=300&width=300",
-    category: "Animales",
-  },
-]
 
 export default function DoggyLoopsLanding() {
+  const [products, setProducts] = useState<Amigurumi[]>([])
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [showOrderForm, setShowOrderForm] = useState(false)
   const [showTestimonialForm, setShowTestimonialForm] = useState(false)
   const [orderData, setOrderData] = useState<OrderData>({
-    customerName: "",
+    customer_name: "",
     email: "",
     phone: "",
     description: "",
@@ -104,60 +39,56 @@ export default function DoggyLoopsLanding() {
     rating: 5,
   })
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  // Simular carga de testimonios
+  // Cargar datos desde la API
   useEffect(() => {
-    const mockTestimonials: Testimonial[] = [
-      {
-        id: 1,
-        name: "María González",
-        message:
-          "¡Increíble trabajo! El amigurumi que pedí para mi hija quedó perfecto. La calidad es excepcional y llegó súper rápido.",
-        rating: 5,
-        createdAt: "2024-01-15",
-      },
-      {
-        id: 2,
-        name: "Carlos Rodríguez",
-        message:
-          "Excelente atención al cliente. Me ayudaron a personalizar el diseño exactamente como lo quería. ¡Muy recomendado!",
-        rating: 5,
-        createdAt: "2024-01-10",
-      },
-      {
-        id: 3,
-        name: "Ana Martínez",
-        message:
-          "Los detalles son impresionantes. Se nota el amor y dedicación en cada puntada. Definitivamente volveré a comprar.",
-        rating: 5,
-        createdAt: "2024-01-08",
-      },
-    ]
-    setTestimonials(mockTestimonials)
+    const loadData = async () => {
+      try {
+        setLoading(true)
+        const [productsData, testimonialsData] = await Promise.all([
+          fetchProducts(),
+          fetchTestimonials()
+        ])
+        setProducts(productsData)
+        setTestimonials(testimonialsData)
+      } catch (error) {
+        console.error('Error loading data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
   }, [])
 
   const handleOrderSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Aquí iría la llamada a la API
-    console.log("Pedido enviado:", orderData, selectedImage)
-    alert("¡Pedido enviado exitosamente! Te contactaremos pronto.")
-    setShowOrderForm(false)
-    setOrderData({ customerName: "", email: "", phone: "", description: "" })
-    setSelectedImage(null)
+    try {
+      await createOrder(orderData, selectedImage || undefined)
+      alert("¡Pedido enviado exitosamente! Te contactaremos pronto.")
+      setShowOrderForm(false)
+      setOrderData({ customer_name: "", email: "", phone: "", description: "" })
+      setSelectedImage(null)
+    } catch (error) {
+      alert("Error al enviar el pedido. Por favor, intenta de nuevo.")
+    }
   }
 
   const handleTestimonialSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Aquí iría la llamada a la API
-    const newTestimonial: Testimonial = {
-      id: testimonials.length + 1,
-      ...testimonialData,
-      createdAt: new Date().toISOString().split("T")[0],
+    try {
+      await createTestimonial(testimonialData)
+      alert("¡Gracias por tu testimonio!")
+      setShowTestimonialForm(false)
+      setTestimonialData({ name: "", message: "", rating: 5 })
+      
+      // Recargar testimonios
+      const updatedTestimonials = await fetchTestimonials()
+      setTestimonials(updatedTestimonials)
+    } catch (error) {
+      alert("Error al enviar el testimonio. Por favor, intenta de nuevo.")
     }
-    setTestimonials([newTestimonial, ...testimonials])
-    setShowTestimonialForm(false)
-    setTestimonialData({ name: "", message: "", rating: 5 })
-    alert("¡Gracias por tu testimonio!")
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,6 +96,17 @@ export default function DoggyLoopsLanding() {
     if (file) {
       setSelectedImage(file)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#7B4A22] via-[#F7E6C4] to-[#FFF6E9] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#FFF6E9] mx-auto mb-4"></div>
+          <p className="text-[#FFF6E9] text-xl">Cargando DoggyLoops...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -231,7 +173,7 @@ export default function DoggyLoopsLanding() {
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-[#FFF6E9]/90 rounded-2xl p-6 shadow border border-[#F7E6C4]">
-              <div className="text-3xl font-bold text-[#7B4A22] mb-2">500+</div>
+              <div className="text-3xl font-bold text-[#7B4A22] mb-2">{products.length}+</div>
               <div className="text-[#4B2E13]">Amigurumis creados</div>
             </div>
             <div className="bg-[#FFF6E9]/90 rounded-2xl p-6 shadow border border-[#F7E6C4]">
@@ -300,44 +242,50 @@ export default function DoggyLoopsLanding() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {mockAmigurumis.map((amigurumi) => (
-              <Card
-                key={amigurumi.id}
-                className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-[#FFF6E9] backdrop-blur-sm transform hover:scale-105"
-              >
-                <div className="relative">
-                  <Image
-                    src={amigurumi.image || "/placeholder.svg"}
-                    alt={amigurumi.name}
-                    width={300}
-                    height={300}
-                    className="w-full h-64 object-cover"
-                  />
-                  <Badge className="absolute top-3 right-3 bg-[#7B4A22] text-[#FFF6E9] border-0 shadow-lg">
-                    {amigurumi.category}
-                  </Badge>
-                </div>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-[#7B4A22] text-xl">{amigurumi.name}</CardTitle>
-                  <CardDescription className="text-[#4B2E13] leading-relaxed">{amigurumi.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <span className="text-3xl font-bold text-[#7B4A22]">
-                      ${amigurumi.price}
-                    </span>
-                    <Button
-                      onClick={() => setShowOrderForm(true)}
-                      className="bg-[#7B4A22] text-[#FFF6E9] hover:bg-[#4B2E13] shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      Personalizar
-                    </Button>
+          {products.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-[#7B4A22] text-xl">Cargando productos...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {products.map((product) => (
+                <Card
+                  key={product.id}
+                  className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-[#FFF6E9] backdrop-blur-sm transform hover:scale-105"
+                >
+                  <div className="relative">
+                    <Image
+                      src={getImageUrl(product.image_url)}
+                      alt={product.name}
+                      width={300}
+                      height={300}
+                      className="w-full h-64 object-cover"
+                    />
+                    <Badge className="absolute top-3 right-3 bg-[#7B4A22] text-[#FFF6E9] border-0 shadow-lg">
+                      {product.category?.name || "Sin categoría"}
+                    </Badge>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-[#7B4A22] text-xl">{product.name}</CardTitle>
+                    <CardDescription className="text-[#4B2E13] leading-relaxed">{product.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <span className="text-3xl font-bold text-[#7B4A22]">
+                        ${product.price}
+                      </span>
+                      <Button
+                        onClick={() => setShowOrderForm(true)}
+                        className="bg-[#7B4A22] text-[#FFF6E9] hover:bg-[#4B2E13] shadow-lg hover:shadow-xl transition-all duration-300"
+                      >
+                        Personalizar
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -359,29 +307,37 @@ export default function DoggyLoopsLanding() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <Card
-                key={testimonial.id}
-                className="border border-[#7B4A22]/60 shadow-lg bg-[#FFF6E9] backdrop-blur-sm hover:shadow-xl transition-all duration-300"
-              >
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg text-[#7B4A22]">{testimonial.name}</CardTitle>
-                    <div className="flex">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-[#F7B7A3] text-[#F7B7A3]" />
-                      ))}
+          {testimonials.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-[#7B4A22] text-xl">No hay testimonios disponibles</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {testimonials.map((testimonial) => (
+                <Card
+                  key={testimonial.id}
+                  className="border border-[#7B4A22]/60 shadow-lg bg-[#FFF6E9] backdrop-blur-sm hover:shadow-xl transition-all duration-300"
+                >
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg text-[#7B4A22]">{testimonial.name}</CardTitle>
+                      <div className="flex">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="w-4 h-4 fill-[#F7B7A3] text-[#F7B7A3]" />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-[#4B2E13] italic leading-relaxed">{testimonial.message}</p>
-                  <p className="text-sm text-[#7B4A22] mt-4">{testimonial.createdAt}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-[#4B2E13] italic leading-relaxed">{testimonial.message}</p>
+                    <p className="text-sm text-[#7B4A22] mt-4">
+                      {new Date(testimonial.created_at).toLocaleDateString('es-ES')}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -445,11 +401,11 @@ export default function DoggyLoopsLanding() {
             <CardContent className="p-6">
               <form onSubmit={handleOrderSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="customerName">Nombre Completo</Label>
+                  <Label htmlFor="customer_name">Nombre Completo</Label>
                   <Input
-                    id="customerName"
-                    value={orderData.customerName}
-                    onChange={(e) => setOrderData({ ...orderData, customerName: e.target.value })}
+                    id="customer_name"
+                    value={orderData.customer_name}
+                    onChange={(e) => setOrderData({ ...orderData, customer_name: e.target.value })}
                     required
                     className="mt-1"
                   />

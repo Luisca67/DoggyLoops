@@ -1,22 +1,27 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
-@Entity("testimonials")
+@Entity('testimonials')
 export class Testimonial {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
-  @Column()
-  name: string
+  @Column({ type: 'varchar', length: 200 })
+  name: string;
 
-  @Column("text")
-  message: string
+  @Column({ type: 'text' })
+  message: string;
 
-  @Column()
-  rating: number
+  @Column({ type: 'int', default: 5 })
+  rating: number;
 
-  @Column({ name: "is_approved", default: false })
-  isApproved: boolean
+  @Column({ type: 'boolean', default: true })
+  is_approved: boolean;
 
-  @CreateDateColumn({ name: "created_at" })
-  createdAt: Date
+  @CreateDateColumn()
+  created_at: Date;
 }

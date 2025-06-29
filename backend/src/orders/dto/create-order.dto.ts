@@ -1,23 +1,36 @@
-import { IsString, IsEmail, IsNotEmpty, IsOptional } from "class-validator"
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsEmail,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
-  @IsNotEmpty()
-  customerName: string
+  @MaxLength(200)
+  customer_name: string;
 
   @IsEmail()
-  @IsNotEmpty()
-  email: string
+  @MaxLength(200)
+  email: string;
 
   @IsString()
-  @IsNotEmpty()
-  phone: string
+  @MaxLength(20)
+  phone?: string;
 
   @IsString()
-  @IsNotEmpty()
-  description: string
+  @MaxLength(20)
+  description: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  estimated_price?: number;
 
   @IsOptional()
   @IsString()
-  imageUrl?: string
+  @MaxLength(500)
+  image_url?: string;
 }
