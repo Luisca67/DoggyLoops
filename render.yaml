@@ -1,9 +1,3 @@
-databases:
-  - name: portfolio_db_9tib
-    databaseName: portfolio_db_9tib
-    user: luis_cabrera
-    plan: free
-
 services:
   # Backend API Service
   - type: web
@@ -16,25 +10,15 @@ services:
       - key: NODE_ENV
         value: production
       - key: DB_HOST
-        fromDatabase:
-          name: portfolio_db_9tib
-          property: host
+        value: dpg-d1atajre5dus73e1d750-a.frankfurt-postgres.render.com
       - key: DB_PORT
-        fromDatabase:
-          name: portfolio_db_9tib
-          property: port
+        value: 5432
       - key: DB_USERNAME
-        fromDatabase:
-          name: portfolio_db_9tib
-          property: user
+        value: luis_cabrera
       - key: DB_PASSWORD
-        fromDatabase:
-          name: portfolio_db_9tib
-          property: password
+        sync: iV5iw7QIG6zmJJRL6EbOlWEZYsYZQaT0
       - key: DB_NAME
-        fromDatabase:
-          name: portfolio_db_9tib
-          property: database
+        value: portfolio_db_9tib
       - key: DB_SSL
         value: true
       - key: PORT
