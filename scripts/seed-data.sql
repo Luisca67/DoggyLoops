@@ -32,3 +32,12 @@ INSERT INTO orders (customer_name, email, phone, description, status, estimated_
 ('Pedro Sánchez', 'pedro@email.com', '+1234567890', 'Quiero un gato naranja con rayas blancas, ojos verdes y una sonrisa tierna. Tamaño mediano, aproximadamente 20cm de alto.', 'in_progress', 25.00),
 ('Laura Jiménez', 'laura@email.com', '+1234567891', 'Necesito un dragón morado con alas doradas para mi hijo. Que sea amigable y no dé miedo. Tamaño grande.', 'pending', 45.00),
 ('Roberto García', 'roberto@email.com', '+1234567892', 'Un osito igual al de la foto pero en color azul marino con detalles en blanco. Es para regalo de baby shower.', 'completed', 30.00);
+
+-- Conectar a la base de datos y ejecutar:
+UPDATE products SET image_url = '/pulpo.jpg' WHERE name LIKE '%Pulpo%';
+UPDATE products SET image_url = '/dragon.jpg' WHERE name LIKE '%Dragón%';
+UPDATE products SET image_url = '/conejo.jpg' WHERE name LIKE '%Conejito%';
+UPDATE products SET image_url = '/sirena.jpg' WHERE name LIKE '%Sirena%';
+UPDATE products SET image_url = '/gatito.jpg' WHERE name LIKE '%Gatito%';
+UPDATE products SET image_url = '/unicornio.jpg' WHERE name LIKE '%Unicornio%';
+UPDATE products SET image_url = '/osito-teddy.png' WHERE name LIKE '%Osito%';
