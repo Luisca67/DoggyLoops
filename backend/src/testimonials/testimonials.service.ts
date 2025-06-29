@@ -13,13 +13,15 @@ export class TestimonialsService {
   ) {}
 
   create(createTestimonialDto: CreateTestimonialDto) {
-    const testimonial = this.testimonialRepository.create(createTestimonialDto);
+    const testimonial = this.testimonialRepository.create({
+      ...createTestimonialDto,
+      is_approved: true,
+    });
     return this.testimonialRepository.save(testimonial);
   }
 
   findAll() {
     return this.testimonialRepository.find({
-      where: { is_approved: true },
       order: { created_at: 'DESC' },
     });
   }

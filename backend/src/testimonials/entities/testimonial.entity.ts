@@ -19,7 +19,7 @@ export class Testimonial {
   @Column({ type: 'int', default: 5 })
   rating: number;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: true })
   is_approved: boolean;
 
   @CreateDateColumn()

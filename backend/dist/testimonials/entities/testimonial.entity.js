@@ -37,7 +37,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Testimonial.prototype, "rating", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'boolean', default: false }),
+    (0, typeorm_1.Column)({ type: 'boolean', default: true }),
     __metadata("design:type", Boolean)
 ], Testimonial.prototype, "is_approved", void 0);
 __decorate([
