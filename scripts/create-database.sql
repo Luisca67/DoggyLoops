@@ -1,8 +1,7 @@
--- Crear base de datos para DoggyLoops
-CREATE DATABASE doggyloops_db;
+
 
 -- Usar la base de datos
-\c doggyloops_db;
+\c portfolio_db_9tib;
 
 -- Tabla de categorías
 CREATE TABLE categories (
