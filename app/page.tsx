@@ -140,13 +140,13 @@ export default function DoggyLoopsLanding() {
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden">
         {/* Fondo decorativo suave */}
-        <div className="absolute inset-0 w-full h-full z-0">
+        <div className="absolute inset-0 w-full h-full z-0 hero-background">
           <Image
             src="/fondo-hero-section.jpg"
             alt="Fondo Hero Section"
-            layout="fill"
-            objectFit="cover"
-            className="w-full h-full object-cover"
+            fill
+            style={{ objectFit: 'cover' }}
+            className="w-full h-full"
             priority
           />
           <div className="absolute inset-0 bg-[#7B4A22]/60" />

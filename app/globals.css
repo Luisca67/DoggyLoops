@@ -120,3 +120,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Estilos específicos para la imagen de fondo del hero */
+.hero-background {
+  background-image: url('/fondo-hero-section.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

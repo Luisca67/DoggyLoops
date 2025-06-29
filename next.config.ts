@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
   },
+  // Configuración para imágenes
+  images: {
+    unoptimized: false,
+    domains: [],
+    remotePatterns: [],
+  },
   // Configuración para mejorar la resolución de módulos
   webpack: (config) => {
     config.resolve.alias = {
