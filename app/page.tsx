@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { fetchProducts, fetchTestimonials, createOrder, createTestimonial, type Amigurumi, type Testimonial, type OrderData } from "@/lib/api"
+import { fetchProducts, fetchTestimonials, createOrder, createTestimonial, type Amigurumi, type Testimonial, type OrderData } from "./lib/api"
 
 // Función para convertir rutas de la base de datos a rutas web
 const getImageUrl = (imageUrl: string | null): string => {
