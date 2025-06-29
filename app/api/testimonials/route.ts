@@ -1,7 +1,16 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server";
+
+// Tipos específicos
+interface Testimonial {
+  id: number;
+  name: string;
+  message: string;
+  rating: number;
+  createdAt: string;
+}
 
 // Simulación de base de datos en memoria
-const testimonials: any[] = [
+const testimonials: Testimonial[] = [
   {
     id: 1,
     name: "María González",
@@ -26,32 +35,36 @@ const testimonials: any[] = [
     rating: 5,
     createdAt: "2024-01-08",
   },
-]
+];
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const body = await request.json();
 
-    const testimonial = {
+    const testimonial: Testimonial = {
       id: testimonials.length + 1,
       name: body.name,
       message: body.message,
       rating: body.rating,
       createdAt: new Date().toISOString().split("T")[0],
-    }
+    };
 
-    testimonials.unshift(testimonial)
+    testimonials.unshift(testimonial);
 
     return NextResponse.json({
       success: true,
       message: "Testimonio agregado exitosamente",
       testimonial,
-    })
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, message: "Error al agregar el testimonio" }, { status: 500 })
+    console.error("Error al agregar el testimonio:", error);
+    return NextResponse.json(
+      { success: false, message: "Error al agregar el testimonio" },
+      { status: 500 }
+    );
   }
 }
 
 export async function GET() {
-  return NextResponse.json({ testimonials })
+  return NextResponse.json({ testimonials });
 }
