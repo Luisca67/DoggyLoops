@@ -20,8 +20,18 @@ const nextConfig: NextConfig = {
       ...config.resolve.alias,
       "@": ".",
     };
+
+    // Excluir archivos del backend del build del frontend
+    config.module.rules.push({
+      test: /\.ts$/,
+      exclude: /backend/,
+    });
+
     return config;
   },
+  // Excluir archivos del backend del build
+  pageExtensions: ["tsx", "ts", "jsx", "js"],
+  distDir: ".next",
 };
 
 export default nextConfig;
