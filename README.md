@@ -60,8 +60,6 @@ Este proyecto fue desarrollado con la asistencia de **Cursor**, una IA avanzada 
 
 ### Características Implementadas con IA
 
-- **Conversión automática de rutas** de imágenes entre formatos Windows y web
-- **Manejo inteligente de errores** con fallbacks apropiados
 - **Validación de datos** en tiempo real
 - **Optimización de rendimiento** con lazy loading y caching
 
