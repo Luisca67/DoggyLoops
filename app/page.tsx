@@ -183,7 +183,7 @@ export default function DoggyLoopsLanding() {
               <div className="text-[#4B2E13]">Amigurumis creados</div>
             </div>
             <div className="bg-[#FFF6E9]/90 rounded-2xl p-6 shadow border border-[#F7E6C4]">
-              <div className="text-3xl font-bold text-[#7B4A22] mb-2">98%</div>
+              <div className="text-3xl font-bold text-[#7B4A22] mb-2">100%</div>
               <div className="text-[#4B2E13]">Clientes satisfechos</div>
             </div>
             <div className="bg-[#FFF6E9]/90 rounded-2xl p-6 shadow border border-[#F7E6C4]">
