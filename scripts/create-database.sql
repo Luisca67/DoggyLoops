@@ -1,8 +1,3 @@
-
-
--- Usar la base de datos
-\c portfolio_db_9tib;
-
 -- Tabla de categorías
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
@@ -49,16 +44,6 @@ CREATE TABLE testimonials (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de contactos/consultas
-CREATE TABLE contacts (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(200) NOT NULL,
-    email VARCHAR(200) NOT NULL,
-    subject VARCHAR(300),
-    message TEXT NOT NULL,
-    is_read BOOLEAN DEFAULT false,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 -- Índices para mejorar rendimiento
 CREATE INDEX idx_orders_status ON orders(status);

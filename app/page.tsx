@@ -17,9 +17,13 @@ import { fetchProducts, fetchTestimonials, createOrder, createTestimonial, type 
 const getImageUrl = (imageUrl: string | null): string => {
   if (!imageUrl) return "/placeholder.svg"
   
-  // Si la ruta contiene 'app\public\' o 'app/public/', extraer solo el nombre del archivo
-  const fileName = imageUrl.replace(/^.*[\\\/]/, '') // Extrae solo el nombre del archivo
-  return `/${fileName}`
+  // Si la ruta ya empieza con /, usarla directamente
+  if (imageUrl.startsWith('/')) {
+    return imageUrl
+  }
+  
+  // Si no, agregar / al inicio
+  return `/${imageUrl}`
 }
 
 export default function DoggyLoopsLanding() {
