@@ -2,7 +2,7 @@
 
 ## 📖 Idea del Proyecto
 
-DoggyLoops es una plataforma web para una tienda de amigurumis (muñecos de crochet) que permite a los clientes:
+DoggyLoops es emprendimiento que desde hace un tiempo ha querido modernizarse. Crear una pagina web para este emprendimiento podria ser un gran avance en ese objetivo, de esta forma, dandole mas confianza a los clientes. DoggyLoopses una plataforma web para una tienda de amigurumis (muñecos de crochet) que permite a los clientes:
 
 - **Explorar el catálogo** de amigurumis disponibles
 - **Realizar pedidos personalizados** con descripciones detalladas
