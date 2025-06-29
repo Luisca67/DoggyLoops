@@ -16,7 +16,7 @@ services:
       - key: DB_USERNAME
         value: luis_cabrera
       - key: DB_PASSWORD
-        sync: iV5iw7QIG6zmJJRL6EbOlWEZYsYZQaT0
+        value: iV5iw7QIG6zmJJRL6EbOlWEZYsYZQaT0
       - key: DB_NAME
         value: portfolio_db_9tib
       - key: DB_SSL
