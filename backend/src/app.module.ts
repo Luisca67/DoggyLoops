@@ -22,6 +22,8 @@ import { TestimonialsModule } from './testimonials/testimonials.module';
       database: process.env.DB_NAME || 'doggyloops_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      ssl:
+        process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
     }),
     CategoriesModule,
     ProductsModule,

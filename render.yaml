@@ -1,0 +1,60 @@
+databases:
+  - name: portfolio_db_9tib
+    databaseName: portfolio_db_9tib
+    user: luis_cabrera
+    plan: free
+
+services:
+  # Backend API Service
+  - type: web
+    name: doggyloops-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_HOST
+        fromDatabase:
+          name: portfolio_db_9tib
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: portfolio_db_9tib
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: portfolio_db_9tib
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: portfolio_db_9tib
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: portfolio_db_9tib
+          property: database
+      - key: DB_SSL
+        value: true
+      - key: PORT
+        value: 3001
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+  # Frontend Service
+  - type: web
+    name: doggyloops-frontend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://doggyloops-backend.onrender.com
+      - key: PORT
+        value: 3000
+    healthCheckPath: /
+    autoDeploy: true

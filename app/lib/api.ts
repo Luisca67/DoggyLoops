@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 // Tipos de datos
 export interface Amigurumi {
@@ -33,6 +33,29 @@ export interface OrderData {
   image_url?: string;
 }
 
+// Tipos de respuesta de la API
+export interface OrderResponse {
+  id: number;
+  customer_name: string;
+  email: string;
+  phone: string;
+  description: string;
+  image_url?: string;
+  status: string;
+  estimated_price?: number;
+  estimated_delivery_date?: string;
+  created_at: string;
+}
+
+export interface TestimonialResponse {
+  id: number;
+  name: string;
+  message: string;
+  rating: number;
+  is_approved: boolean;
+  created_at: string;
+}
+
 // Funciones para obtener datos
 export const fetchProducts = async (): Promise<Amigurumi[]> => {
   try {
@@ -63,7 +86,7 @@ export const fetchTestimonials = async (): Promise<Testimonial[]> => {
 export const createOrder = async (
   orderData: OrderData,
   image?: File
-): Promise<any> => {
+): Promise<OrderResponse> => {
   try {
     const formData = new FormData();
 
@@ -99,7 +122,7 @@ export const createTestimonial = async (testimonialData: {
   name: string;
   message: string;
   rating: number;
-}): Promise<any> => {
+}): Promise<TestimonialResponse> => {
   try {
     const response = await fetch(`${API_BASE_URL}/testimonials`, {
       method: "POST",
