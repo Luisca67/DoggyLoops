@@ -17,7 +17,7 @@ export class Order {
   @Column({ type: 'varchar', length: 200 })
   email: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   phone: string;
 
   @Column({ type: 'text' })

@@ -18,7 +18,7 @@ export class CreateOrderDto {
 
   @IsString()
   @MaxLength(20)
-  phone: string;
+  phone?: string;
 
   @IsString()
   @MaxLength(20)
